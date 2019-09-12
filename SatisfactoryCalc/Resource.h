@@ -8,4 +8,9 @@ struct Resource
 {
 	ResourceType type;
 	double amount;
+
+	bool operator < (const Resource& res) const
+	{
+		return (amount < res.amount);
+	}
 };

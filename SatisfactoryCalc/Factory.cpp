@@ -2,6 +2,8 @@
 #include <assert.h>
 
 #include <iostream>
+#include <algorithm>
+#include <assert.h>
 
 
 
@@ -17,8 +19,12 @@ Factory::Factory() {
 	};
 
 		desiredResources = {
-			{ReinforcedIronPlate, 1}
+			{ReinforcedIronPlate, 1},
+			{IronPlate, 3},
+			{IronOre, 3}
 		};
+
+		//std::sort(desiredResources.begin(), desiredResources.end());
 
 
 }
@@ -35,20 +41,45 @@ std::vector<Resource> Factory::backward(Recipe recipe, Resource desOut)
 	return std::vector<Resource> {reqIn1, reqIn2};
 }
 
+void Factory::addRequiredProducts(std::vector<Resource> requiredRes, std::map<ResourceType,double>& currentResources) {
 
-std::list<Resource> Factory::calcAllResources()  // calculate all intermediate resources from the desired backwards
-{
-	for (auto& res : desiredResources) // access by reference to avoid copying
-	{
-		allResources[res.type] += res.amount;
-		std::cout << res.type << std::endl;
-		std::cout << res.amount << std::endl;
+	for (Resource res : requiredRes) {
+		if (currentResources.find(res.type) == currentResources.end()) {  // resource needs to be added
+			currentResources.insert(std::make_pair(res.type, res.amount));
+		}
+		else {		//resource already exists and amount needs to be added
+			currentResources[res.type] += res.amount;
+		}
 	}
+}
 
-	// TODO: use backwards to get amount of ingredients
 
+std::map<ResourceType, double> Factory::calcAllResources()  // calculate all intermediate resources from the desired backwards
+{
+	std::map<ResourceType, double> currentResources = desiredResources;
+	std::map<ResourceType, double>::iterator highestProductIt = currentResources.end();
+	highestProductIt--;
+	int highestProduct = highestProductIt->first;
 	
+	for (int i = highestProduct; i > 1; i--) {
+		ResourceType product = static_cast<ResourceType>(i);
+		if (currentResources.count(product) == 1) {
+			Recipe productRecipe = allRecipes[product];
+			Resource res{ product, currentResources[product] };
 
+			for (Resource res : backward(productRecipe, res)) {
+				if (currentResources.find(res.type) == currentResources.end()) {  // resource needs to be added
+					currentResources.insert(std::make_pair(res.type, res.amount));
+				}
+				else {		//resource already exists and amount needs to be added
+					currentResources[res.type] += res.amount;
+				}
+			}
 
-	return std::list<Resource>();
+			//addRequiredProducts(backward(productRecipe, res), currentResources);
+
+		}
+	}	
+
+	return currentResources;
 }

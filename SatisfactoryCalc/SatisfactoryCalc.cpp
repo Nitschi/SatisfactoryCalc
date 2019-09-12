@@ -10,7 +10,11 @@ int main()
     std::cout << "Hello World!\n";
 
 	Factory myFactory = Factory();
-	myFactory.calcAllResources();
+	std::map<ResourceType,double> allResources = myFactory.calcAllResources();
+
+	for (std::pair<ResourceType, double> pair : allResources) {
+		std::cout << "Type: " << pair.first << " Amount: " << pair.second << std::endl;
+	}
 
 }
 

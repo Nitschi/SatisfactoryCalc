@@ -8,12 +8,13 @@
 class Factory
 {
 public:
-	std::list <Resource> calcAllResources();
+	std::map<ResourceType, double> calcAllResources();
 	std::vector<Resource> backward(Recipe recipe, Resource desOut);
+	void addRequiredProducts(std::vector<Resource> requiredRes, std::map<ResourceType, double>& currentResources);
 	Factory();
 
 private:
 	std::map<ResourceType, Recipe> allRecipes;
 	std::map<ResourceType, double> allResources;
-	std::list<Resource> desiredResources;
+	std::map<ResourceType, double> desiredResources;
 };
