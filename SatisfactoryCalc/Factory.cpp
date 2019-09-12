@@ -26,17 +26,9 @@ Factory::Factory() {
 			{ReinforcedIronPlate,{{IronPlate, 4},	{Screw, 24},	{ReinforcedIronPlate, 1}}}
 	};
 
-		desiredResources = {
-			{EncasedIndustrialBeam, 5},
-			{SteelPipe, 15}
-		};
-
-		//std::sort(desiredResources.begin(), desiredResources.end());
-
-
 }
 
-std::vector<Resource> Factory::backward(Recipe recipe, Resource desOut)
+std::vector<Resource> Factory::oneStepIngredients(Recipe recipe, Resource desOut)
 {
 	assert(desOut.type == recipe.out.type);
 	Resource reqIn1;
@@ -61,7 +53,7 @@ void Factory::addRequiredProducts(std::vector<Resource> requiredRes, std::map<Re
 }
 
 
-std::map<ResourceType, double> Factory::calcAllResources()  // calculate all intermediate resources from the desired backwards
+std::map<ResourceType, double> Factory::calcAllIngredients(std::map<ResourceType, double> desiredResources)  // calculate all intermediate resources from the desired backwards
 {
 	std::map<ResourceType, double> currentResources = desiredResources;
 	std::map<ResourceType, double>::iterator highestProductIt = currentResources.end();
@@ -74,9 +66,28 @@ std::map<ResourceType, double> Factory::calcAllResources()  // calculate all int
 			Recipe productRecipe = allRecipes[product];
 			Resource res{ product, currentResources[product] };
 
-			addRequiredProducts(backward(productRecipe, res), currentResources);
+			addRequiredProducts(oneStepIngredients(productRecipe, res), currentResources);
 		}
 	}	
 
 	return currentResources;
+}
+
+std::map<ResourceType, double> Factory::calcPossibleIngredients(std::map<ResourceType, double> productionConstraints, std::map<ResourceType, double> allIngredients) {
+	
+	
+	if (!productionConstraints.empty() && !allIngredients.empty()) {
+		double limitingFactor = INFINITY;
+		for (std::pair<ResourceType, double> constraint : productionConstraints) {
+				double factor = constraint.second / allIngredients[constraint.first];
+				(factor < limitingFactor) ? (limitingFactor = factor) : (limitingFactor = limitingFactor);  //ternary operator: (condition) ? (if_true) : (if_false)
+		}
+		auto possibleIngredients = allIngredients;
+		for (auto& ingredient : possibleIngredients) ingredient.second *= limitingFactor;
+		return possibleIngredients;
+	}
+	else {
+		std::cout << "NO INGREDIENTS OR NO CONSTRAINTS GIVEN! EXITING" << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 }

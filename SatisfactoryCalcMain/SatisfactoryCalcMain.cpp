@@ -8,7 +8,11 @@
 int main()
 {
 	Factory myFactory = Factory();
-	std::map<ResourceType, double> allResources = myFactory.calcAllResources();
+	std::map<ResourceType, double> desiredResources = {
+			{EncasedIndustrialBeam, 5},
+			{SteelPipe, 15}
+		};
+	std::map<ResourceType, double> allResources = myFactory.calcAllIngredients(desiredResources);
 
 	for (std::pair<ResourceType, double> pair : allResources) {
 		std::cout << "Type: " << pair.first << " Amount: " << pair.second << std::endl;
