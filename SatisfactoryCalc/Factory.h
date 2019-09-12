@@ -10,6 +10,7 @@ class Factory
 public:
 	std::map<ResourceType, double> calcAllIngredients(std::map<ResourceType, double> desiredResources);
 	std::map<ResourceType, double> calcPossibleIngredients(std::map<ResourceType, double> productionConstraints, std::map<ResourceType, double> allIngredients);
+	std::map<ResourceType, double> calcNecessaryFactories(std::map<ResourceType, double> possibleIngredients);
 	std::vector<Resource> oneStepIngredients(Recipe recipe, Resource desOut);
 	void addRequiredProducts(std::vector<Resource> requiredRes, std::map<ResourceType, double>& currentResources);
 	Factory();

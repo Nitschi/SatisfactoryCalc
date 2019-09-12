@@ -8,5 +8,5 @@ struct Recipe
 	Resource in1;
 	Resource in2;
 	Resource out;
-	int prodTime;
+	double prodTime;
 };

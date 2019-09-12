@@ -11,19 +11,19 @@ Factory::Factory() {
 	Resource no{ Nothing, 0 };		// no second input material
 
 		allRecipes = {
-			{IronOre,			{no, no, {IronOre, 1}}},
-			{Coal,				{no, no, {Coal, 1}}},
-			{LimeStone,			{no, no, {LimeStone, 1}}},
-			{IronIngot,			{{IronOre, 1},			no,			{IronIngot, 1}}},
-			{Concrete,			{{LimeStone, 3},		no,			{Concrete, 1}}},
-			{IronPlate,			{{IronIngot, 2},		no,			{IronPlate, 1}}},
-			{SteelIngot,		{{IronOre, 3},		{Coal, 3},		{SteelIngot, 2}}},
-			{SteelPipe,			{{SteelIngot, 1},		no,			{SteelPipe, 1}}},
-			{SteelBeam,			{{SteelIngot, 3},		no,			{SteelBeam, 1}}},
-			{EncasedIndustrialBeam,{{SteelBeam, 4},	{Concrete,5},	{EncasedIndustrialBeam, 1}}},
-			{IronRod,			{{IronIngot, 1},		no,			{IronRod, 1}}},
-			{Screw,				{{IronRod, 1},			no,			{Screw, 6}}},
-			{ReinforcedIronPlate,{{IronPlate, 4},	{Screw, 24},	{ReinforcedIronPlate, 1}}}
+			{IronOre,			{no, no, {IronOre, 1}, 1}},
+			{Coal,				{no, no, {Coal, 1}, 1}},
+			{LimeStone,			{no, no, {LimeStone, 1}, 1}},
+			{IronIngot,			{{IronOre, 1},			no,			{IronIngot, 1}, 2}},
+			{Concrete,			{{LimeStone, 3},		no,			{Concrete, 1}, 4}},
+			{IronPlate,			{{IronIngot, 2},		no,			{IronPlate, 1}, 4}},
+			{SteelIngot,		{{IronOre, 3},		{Coal, 3},		{SteelIngot, 2}, 4}},
+			{SteelPipe,			{{SteelIngot, 1},		no,			{SteelPipe, 1}, 4}},
+			{SteelBeam,			{{SteelIngot, 3},		no,			{SteelBeam, 1}, 6}},
+			{EncasedIndustrialBeam,{{SteelBeam, 4},	{Concrete,5},	{EncasedIndustrialBeam, 1}, 15}},
+			{IronRod,			{{IronIngot, 1},		no,			{IronRod, 1}, 4}},
+			{Screw,				{{IronRod, 1},			no,			{Screw, 6}, 4}},
+			{ReinforcedIronPlate,{{IronPlate, 4},	{Screw, 24},	{ReinforcedIronPlate, 1}, 12}}
 	};
 
 }
@@ -74,20 +74,37 @@ std::map<ResourceType, double> Factory::calcAllIngredients(std::map<ResourceType
 }
 
 std::map<ResourceType, double> Factory::calcPossibleIngredients(std::map<ResourceType, double> productionConstraints, std::map<ResourceType, double> allIngredients) {
-	
+	// Production constraints should be given in Production per minute
 	
 	if (!productionConstraints.empty() && !allIngredients.empty()) {
 		double limitingFactor = INFINITY;
+		ResourceType limitingResource;
 		for (std::pair<ResourceType, double> constraint : productionConstraints) {
 				double factor = constraint.second / allIngredients[constraint.first];
-				(factor < limitingFactor) ? (limitingFactor = factor) : (limitingFactor = limitingFactor);  //ternary operator: (condition) ? (if_true) : (if_false)
+				if (factor < limitingFactor) {
+					limitingResource = constraint.first;
+					limitingFactor = factor;
+				}
 		}
 		auto possibleIngredients = allIngredients;
 		for (auto& ingredient : possibleIngredients) ingredient.second *= limitingFactor;
+		std::cout << "Limiting Resource: " << limitingResource << std::endl;
 		return possibleIngredients;
 	}
 	else {
 		std::cout << "NO INGREDIENTS OR NO CONSTRAINTS GIVEN! EXITING" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+}
+
+std::map<ResourceType, double> Factory::calcNecessaryFactories( std::map<ResourceType, double> possibleIngredients) {
+
+	std::map<ResourceType, double> necessaryFactories;
+
+	for (auto ingredient : possibleIngredients) {
+		double factoryNumber = (ingredient.second / allRecipes[ingredient.first].out.amount) * (allRecipes[ingredient.first].prodTime / 60);
+		std::cout << (allRecipes[ingredient.first].prodTime / 60) << std::endl;
+		necessaryFactories.insert(std::make_pair(ingredient.first, factoryNumber));
+	}
+	return necessaryFactories;
 }

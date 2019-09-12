@@ -9,12 +9,33 @@ int main()
 {
 	Factory myFactory = Factory();
 	std::map<ResourceType, double> desiredResources = {
-			{EncasedIndustrialBeam, 5},
-			{SteelPipe, 15}
+			{EncasedIndustrialBeam, 1},
+			{SteelPipe, 3}
 		};
 	std::map<ResourceType, double> allResources = myFactory.calcAllIngredients(desiredResources);
 
+	std::map<ResourceType, double> productionConstraints = {
+			{IronOre, 480},
+			{LimeStone, 480},
+			{Coal, 480}
+	};
+
+	std::map<ResourceType, double> possibleResources = myFactory.calcPossibleIngredients(productionConstraints, allResources);
+
+	std::map<ResourceType, double> necessaryFactories = myFactory.calcNecessaryFactories(possibleResources);
+
 	for (std::pair<ResourceType, double> pair : allResources) {
+		std::cout << "Type: " << pair.first << " Amount: " << pair.second << std::endl;
+	}
+
+	std::cout << "POSSIBLE:" << std::endl;
+
+	for (std::pair<ResourceType, double> pair : possibleResources) {
+		std::cout << "Type: " << pair.first << " Amount: " << pair.second << std::endl;
+	}
+
+	std::cout << "FACTORIES:" << std::endl;
+	for (std::pair<ResourceType, double> pair : necessaryFactories) {
 		std::cout << "Type: " << pair.first << " Amount: " << pair.second << std::endl;
 	}
 
