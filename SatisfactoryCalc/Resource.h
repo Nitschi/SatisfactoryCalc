@@ -2,7 +2,7 @@
 
 #include <string>
 
-enum ResourceType{Nothing, IronOre, IronIngot, IronPlate, IronRod, Screw, ReinforcedIronPlate};
+enum ResourceType{Nothing, IronOre, LimeStone, Coal, Concrete, IronIngot, SteelIngot, SteelPipe, SteelBeam, EncasedIndustrialBeam, IronPlate, IronRod, Screw, ReinforcedIronPlate};
 
 struct Resource
 {
