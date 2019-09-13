@@ -3,7 +3,6 @@
 #include <list>
 #include <map>
 #include "Resource.h"
-#include "Recipe.h"
 
 class Factory
 {
@@ -15,6 +14,4 @@ public:
 	void addRequiredProducts(std::vector<Resource> requiredRes, std::map<ResourceType, double>& currentResources);
 	Factory();
 
-private:
-	std::map<ResourceType, Recipe> allRecipes;
 };

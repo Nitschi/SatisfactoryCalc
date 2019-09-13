@@ -7,5 +7,4 @@
 
 #include "gtest/gtest.h"
 #include "../SatisfactoryCalc/Factory.h"
-#include "../SatisfactoryCalc/Recipe.h"
 #include "../SatisfactoryCalc/Resource.h"

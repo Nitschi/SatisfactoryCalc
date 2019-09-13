@@ -1,4 +1,5 @@
 #include "Factory.h"
+#include "Resource.h"
 #include <assert.h>
 
 #include <iostream>
@@ -8,36 +9,21 @@
 
 
 Factory::Factory() {
-	Resource no{ Nothing, 0 };		// no second input material
-
-		allRecipes = {
-			{IronOre,			{no, no, {IronOre, 1}, 1}},
-			{Coal,				{no, no, {Coal, 1}, 1}},
-			{LimeStone,			{no, no, {LimeStone, 1}, 1}},
-			{IronIngot,			{{IronOre, 1},			no,			{IronIngot, 1}, 2}},
-			{Concrete,			{{LimeStone, 3},		no,			{Concrete, 1}, 4}},
-			{IronPlate,			{{IronIngot, 2},		no,			{IronPlate, 1}, 4}},
-			{SteelIngot,		{{IronOre, 3},		{Coal, 3},		{SteelIngot, 2}, 4}},
-			{SteelPipe,			{{SteelIngot, 1},		no,			{SteelPipe, 1}, 4}},
-			{SteelBeam,			{{SteelIngot, 3},		no,			{SteelBeam, 1}, 6}},
-			{EncasedIndustrialBeam,{{SteelBeam, 4},	{Concrete,5},	{EncasedIndustrialBeam, 1}, 15}},
-			{IronRod,			{{IronIngot, 1},		no,			{IronRod, 1}, 4}},
-			{Screw,				{{IronRod, 1},			no,			{Screw, 6}, 4}},
-			{ReinforcedIronPlate,{{IronPlate, 4},	{Screw, 24},	{ReinforcedIronPlate, 1}, 12}}
-	};
-
 }
 
 std::vector<Resource> Factory::oneStepIngredients(Recipe recipe, Resource desOut)
 {
+	std::cout <<"Recipe: " << resourceNames[recipe.out.type] << std::endl;
+	std::cout << "desout: " << resourceNames[desOut.type] << std::endl;
 	assert(desOut.type == recipe.out.type);
-	Resource reqIn1;
-	Resource reqIn2;
-	reqIn1.type = recipe.in1.type;
-	reqIn2.type = recipe.in2.type;
-	reqIn1.amount = (recipe.in1.amount / recipe.out.amount) * desOut.amount;
-	reqIn2.amount = (recipe.in2.amount / recipe.out.amount) * desOut.amount;
-	return std::vector<Resource> {reqIn1, reqIn2};
+	std::vector<Resource> reqIn;
+	int i = 0;
+	for (auto input : recipe.in) {
+		double amount = (input.amount / recipe.out.amount) * desOut.amount;
+		Resource res{ input.type, amount };
+		reqIn.push_back(res);
+	}
+	return reqIn;
 }
 
 void Factory::addRequiredProducts(std::vector<Resource> requiredRes, std::map<ResourceType,double>& currentResources) {
@@ -64,6 +50,7 @@ std::map<ResourceType, double> Factory::calcAllIngredients(std::map<ResourceType
 		ResourceType product = static_cast<ResourceType>(i);
 		if (currentResources.count(product) == 1) {
 			Recipe productRecipe = allRecipes[product];
+			std::cout << "product " << resourceNames[productRecipe.in[0].type] << std::endl;
 			Resource res{ product, currentResources[product] };
 
 			addRequiredProducts(oneStepIngredients(productRecipe, res), currentResources);

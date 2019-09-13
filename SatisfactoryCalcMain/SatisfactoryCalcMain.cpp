@@ -3,7 +3,9 @@
 
 #include <iostream>
 
+#include "../SatisfactoryCalc/Resource.h"
 #include "../SatisfactoryCalc/Factory.h"
+
 
 int main()
 {
@@ -25,18 +27,18 @@ int main()
 	std::map<ResourceType, double> necessaryFactories = myFactory.calcNecessaryFactories(possibleResources);
 
 	for (std::pair<ResourceType, double> pair : allResources) {
-		std::cout << "Type: " << pair.first << " Amount: " << pair.second << std::endl;
+		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
 	}
 
 	std::cout << "POSSIBLE:" << std::endl;
 
 	for (std::pair<ResourceType, double> pair : possibleResources) {
-		std::cout << "Type: " << pair.first << " Amount: " << pair.second << std::endl;
+		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
 	}
 
 	std::cout << "FACTORIES:" << std::endl;
 	for (std::pair<ResourceType, double> pair : necessaryFactories) {
-		std::cout << "Type: " << pair.first << " Amount: " << pair.second << std::endl;
+		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
 	}
 
 	std::cin.get();
