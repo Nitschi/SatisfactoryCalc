@@ -4,14 +4,14 @@
 #include <map>
 #include "Resource.h"
 
-class Factory
+class Factory  // namespace would suffice
 {
-public:
-	std::map<ResourceType, double> calcAllIngredients(std::map<ResourceType, double> desiredResources);
-	std::map<ResourceType, double> calcPossibleIngredients(std::map<ResourceType, double> productionConstraints, std::map<ResourceType, double> allIngredients);
-	std::map<ResourceType, double> calcNecessaryFactories(std::map<ResourceType, double> possibleIngredients);
+public: 
+	typedef std::map<ResourceType, double> ResMap;
+	ResMap calcAllIngredients(ResMap desiredResources);
+	ResMap calcPossibleIngredients(ResMap productionConstraints, ResMap allIngredients);
+	ResMap calcNecessaryFactories(ResMap possibleIngredients);
 	std::vector<Resource> oneStepIngredients(Recipe recipe, Resource desOut);
 	void addRequiredProducts(std::vector<Resource> requiredRes, std::map<ResourceType, double>& currentResources);
-	Factory();
 
 };

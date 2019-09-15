@@ -6,18 +6,17 @@
 #include <algorithm>
 #include <assert.h>
 
-
-
-Factory::Factory() {
-}
-
 std::vector<Resource> Factory::oneStepIngredients(Recipe recipe, Resource desOut)
 {
 	std::cout <<"Recipe: " << resourceNames[recipe.out.type] << std::endl;
 	std::cout << "desout: " << resourceNames[desOut.type] << std::endl;
-	assert(desOut.type == recipe.out.type);
+
+	if (desOut.type != recipe.out.type) {
+		throw std::runtime_error("Wrong recipe(" + resourceNames[recipe.out.type] +") for this resource(" + resourceNames[desOut.type]+ ")");
+	}
+
 	std::vector<Resource> reqIn;
-	int i = 0;
+
 	for (auto input : recipe.in) {
 		double amount = (input.amount / recipe.out.amount) * desOut.amount;
 		Resource res{ input.type, amount };
@@ -28,9 +27,9 @@ std::vector<Resource> Factory::oneStepIngredients(Recipe recipe, Resource desOut
 
 void Factory::addRequiredProducts(std::vector<Resource> requiredRes, std::map<ResourceType,double>& currentResources) {
 
-	for (Resource res : requiredRes) {
+	for (Resource& res : requiredRes) {
 		if (currentResources.find(res.type) == currentResources.end()) {  // resource needs to be added
-			currentResources.insert(std::make_pair(res.type, res.amount));
+			currentResources.insert({ res.type, res.amount });
 		}
 		else {		//resource already exists and amount needs to be added
 			currentResources[res.type] += res.amount;
@@ -42,11 +41,11 @@ void Factory::addRequiredProducts(std::vector<Resource> requiredRes, std::map<Re
 std::map<ResourceType, double> Factory::calcAllIngredients(std::map<ResourceType, double> desiredResources)  // calculate all intermediate resources from the desired backwards
 {
 	std::map<ResourceType, double> currentResources = desiredResources;
-	std::map<ResourceType, double>::iterator highestProductIt = currentResources.end();
-	highestProductIt--;
-	int highestProduct = highestProductIt->first;
+	std::map<ResourceType, double>::reverse_iterator highestProductIt = currentResources.rbegin();
+	ResourceType highestProduct = highestProductIt->first;
 	
-	for (int i = highestProduct; i > 1; i--) {
+	for (int i = highestProduct; i > 1; i--) 
+	{
 		ResourceType product = static_cast<ResourceType>(i);
 		if (currentResources.count(product) == 1) {
 			Recipe productRecipe = allRecipes[product];
@@ -60,13 +59,13 @@ std::map<ResourceType, double> Factory::calcAllIngredients(std::map<ResourceType
 	return currentResources;
 }
 
-std::map<ResourceType, double> Factory::calcPossibleIngredients(std::map<ResourceType, double> productionConstraints, std::map<ResourceType, double> allIngredients) {
+Factory::ResMap Factory::calcPossibleIngredients(ResMap productionConstraints, ResMap allIngredients) {
 	// Production constraints should be given in Production per minute
 	
 	if (!productionConstraints.empty() && !allIngredients.empty()) {
 		double limitingFactor = INFINITY;
-		ResourceType limitingResource;
-		for (std::pair<ResourceType, double> constraint : productionConstraints) {
+		ResourceType limitingResource = Nothing;
+		for (auto& constraint : productionConstraints) {
 				double factor = constraint.second / allIngredients[constraint.first];
 				if (factor < limitingFactor) {
 					limitingResource = constraint.first;
@@ -84,11 +83,11 @@ std::map<ResourceType, double> Factory::calcPossibleIngredients(std::map<Resourc
 	}
 }
 
-std::map<ResourceType, double> Factory::calcNecessaryFactories( std::map<ResourceType, double> possibleIngredients) {
+Factory::ResMap Factory::calcNecessaryFactories( ResMap possibleIngredients) {
 
 	std::map<ResourceType, double> necessaryFactories;
 
-	for (auto ingredient : possibleIngredients) {
+	for (auto& ingredient : possibleIngredients) {
 		double factoryNumber = (ingredient.second / allRecipes[ingredient.first].out.amount) * (allRecipes[ingredient.first].prodTime / 60);
 		std::cout << (allRecipes[ingredient.first].prodTime / 60) << std::endl;
 		necessaryFactories.insert(std::make_pair(ingredient.first, factoryNumber));
