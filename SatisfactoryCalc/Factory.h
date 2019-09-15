@@ -3,11 +3,12 @@
 #include <list>
 #include <map>
 #include "Resource.h"
+typedef std::map<ResourceType, double> ResMap;
 
 class Factory  // namespace would suffice
 {
 public: 
-	typedef std::map<ResourceType, double> ResMap;
+	
 	ResMap calcAllIngredients(ResMap desiredResources);
 	ResMap calcPossibleIngredients(ResMap productionConstraints, ResMap allIngredients);
 	ResMap calcNecessaryFactories(ResMap possibleIngredients);

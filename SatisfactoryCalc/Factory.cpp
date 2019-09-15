@@ -8,8 +8,6 @@
 
 std::vector<Resource> Factory::oneStepIngredients(Recipe recipe, Resource desOut)
 {
-	std::cout <<"Recipe: " << resourceNames[recipe.out.type] << std::endl;
-	std::cout << "desout: " << resourceNames[desOut.type] << std::endl;
 
 	if (desOut.type != recipe.out.type) {
 		throw std::runtime_error("Wrong recipe(" + resourceNames[recipe.out.type] +") for this resource(" + resourceNames[desOut.type]+ ")");
@@ -49,7 +47,6 @@ std::map<ResourceType, double> Factory::calcAllIngredients(std::map<ResourceType
 		ResourceType product = static_cast<ResourceType>(i);
 		if (currentResources.count(product) == 1) {
 			Recipe productRecipe = allRecipes[product];
-			std::cout << "product " << resourceNames[productRecipe.in[0].type] << std::endl;
 			Resource res{ product, currentResources[product] };
 
 			addRequiredProducts(oneStepIngredients(productRecipe, res), currentResources);
@@ -59,7 +56,7 @@ std::map<ResourceType, double> Factory::calcAllIngredients(std::map<ResourceType
 	return currentResources;
 }
 
-Factory::ResMap Factory::calcPossibleIngredients(ResMap productionConstraints, ResMap allIngredients) {
+ResMap Factory::calcPossibleIngredients(ResMap productionConstraints, ResMap allIngredients) {
 	// Production constraints should be given in Production per minute
 	
 	if (!productionConstraints.empty() && !allIngredients.empty()) {
@@ -83,13 +80,12 @@ Factory::ResMap Factory::calcPossibleIngredients(ResMap productionConstraints, R
 	}
 }
 
-Factory::ResMap Factory::calcNecessaryFactories( ResMap possibleIngredients) {
+ResMap Factory::calcNecessaryFactories( ResMap possibleIngredients) {
 
 	std::map<ResourceType, double> necessaryFactories;
 
 	for (auto& ingredient : possibleIngredients) {
 		double factoryNumber = (ingredient.second / allRecipes[ingredient.first].out.amount) * (allRecipes[ingredient.first].prodTime / 60);
-		std::cout << (allRecipes[ingredient.first].prodTime / 60) << std::endl;
 		necessaryFactories.insert(std::make_pair(ingredient.first, factoryNumber));
 	}
 	return necessaryFactories;

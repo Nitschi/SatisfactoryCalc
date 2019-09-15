@@ -2,61 +2,86 @@
 //
 
 #include <iostream>
+#include <fstream>
+
+#include "yaml-cpp/yaml.h"
+/*
+int main() {
+
+	YAML::Emitter out;
+	out << "Hello, World!";
+
+	std::cout << "Here's the output YAML:\n" << out.c_str(); // prints "Hello, World!"
+	std::cin.get();
+	std::ofstream myfile;
+	myfile.open("resources.yaml");
+	myfile << out.c_str();
+	myfile.close();
+
+	return 0;
+} */
+
+
 
 #include "../SatisfactoryCalc/Resource.h"
 #include "../SatisfactoryCalc/Factory.h"
 
+ResMap loadResMap(std::string filename)
+{
+	std::ifstream fin(filename);
+	YAML::Node node = YAML::Load(fin);
 
-int main()
+	ResMap res_map;
+	for (YAML::const_iterator it = node.begin(); it != node.end(); ++it)
+	{
+		res_map.insert({ static_cast<ResourceType>(it->first.as<int>()), it->second.as<double>() });
+	}
+
+	return res_map;
+}
+
+
+ int main()
 {
 	Factory myFactory;
-	std::map<ResourceType, double> desiredResources = {
-		{HeavyModularFrame, 2},
-		{SteelPipe, 15},
-		{Motor, 3},
-		{IronPlate, 100},
-		{ReinforcedIronPlate, 30},
-		{SteelBeam, 15},
-		{Cable, 30},
-		{ModularFrame, 5}
-		};
+
+	ResMap constraints = loadResMap("constraints.yaml");
+
+	ResMap desiredResources = loadResMap("desired.yaml");
+	
 	std::map<ResourceType, double> allResources = myFactory.calcAllIngredients(desiredResources);
 
-	std::map<ResourceType, double> productionConstraints = {
-		{IronOre, 480},
-		{LimeStone, 480},
-		{Coal, 480}
-	};
-
-	std::map<ResourceType, double> possibleResources = myFactory.calcPossibleIngredients(productionConstraints, allResources);
+	std::map<ResourceType, double> possibleResources = myFactory.calcPossibleIngredients(constraints, allResources);
 
 	std::map<ResourceType, double> necessaryFactories = myFactory.calcNecessaryFactories(possibleResources);
 
-	for (auto& pair : allResources) {
+	std::cout << std::endl << "CONSTRAINTS:" << std::endl << std::endl;
+	for (auto& pair : constraints) {
 		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
 	}
 
-	std::cout << "POSSIBLE:" << std::endl;
+	std::cout << std::endl << "DESIRED:" << std::endl << std::endl;
+	for (auto& pair : desiredResources) {
+		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
+	}
+
+	std::cout << std::endl << "POSSIBLE:" << std::endl << std::endl;
 
 	for (auto& pair : possibleResources) {
 		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
 	}
 
-	std::cout << "FACTORIES:" << std::endl;
+	std::cout << std::endl << "FACTORIES:" << std::endl << std::endl;
 	for (auto& pair : necessaryFactories) {
 		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
 	}
 
 	std::cin.get();
+	return 0;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
+
+
+
