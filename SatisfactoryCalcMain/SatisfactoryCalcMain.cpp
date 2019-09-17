@@ -57,23 +57,23 @@ ResMap loadResMap(std::string filename)
 
 	std::cout << std::endl << "CONSTRAINTS:" << std::endl << std::endl;
 	for (auto& pair : constraints) {
-		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
+		std::cout << "  -  " << resourceNames[pair.first] << " ---> " << pair.second << std::endl;
 	}
 
 	std::cout << std::endl << "DESIRED:" << std::endl << std::endl;
 	for (auto& pair : desiredResources) {
-		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
+		std::cout << "  -  " << resourceNames[pair.first] << " ---> " << pair.second << std::endl;
 	}
 
 	std::cout << std::endl << "POSSIBLE:" << std::endl << std::endl;
 
 	for (auto& pair : possibleResources) {
-		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
+		std::cout << "  -  " << resourceNames[pair.first] << " ---> " << pair.second << std::endl;
 	}
 
 	std::cout << std::endl << "FACTORIES:" << std::endl << std::endl;
 	for (auto& pair : necessaryFactories) {
-		std::cout << "Type: " << resourceNames[pair.first] << " Amount: " << pair.second << std::endl;
+		std::cout << "  -  " << resourceNames[pair.first] << " ---> " << pair.second << std::endl;
 	}
 
 	std::cin.get();
