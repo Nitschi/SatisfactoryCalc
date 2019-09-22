@@ -105,7 +105,7 @@ ResMap Factory::calcNecessaryFactories( ResMap possibleIngredients)
 
 	for (auto& ingredient : possibleIngredients) {
 		Recipe recipe = getRecipe(ingredient.first);
-		double factoryNumber = round((ingredient.second / recipe.out.second) * (recipe.time / 60));
+		double factoryNumber = (ingredient.second / recipe.out.second) * (recipe.time / 60);
 		necessaryFactories.insert({ ingredient.first, factoryNumber });
 	}
 	return necessaryFactories;
