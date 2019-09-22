@@ -1,0 +1,189 @@
+# Important Note: 
+# Recipes can ONLY depend on resources, whose recipe is defined further above!
+- Nothing:
+      Nothing : 0
+      Time : 1
+      Amount : 1
+- Iron Ore:
+      Nothing : 0
+      Time : 1
+      Amount : 1
+- Copper Ore:
+      Nothing : 0
+      Time : 1
+      Amount : 1
+- Limestone:
+      Nothing : 0
+      Time : 1
+      Amount : 1
+- Coal:
+      Nothing : 0
+      Time : 1
+      Amount : 1
+- Crude Oil:
+      Nothing : 0
+      Time : 0.5
+      Amount : 1
+- Caterium:
+      Nothing : 0
+      Time : 1
+      Amount : 1
+- Sulfur:
+      Nothing : 0
+      Time : 1
+      Amount : 1
+- Raw Quartz:
+      Nothing : 0
+      Time : 1
+      Amount : 1
+- Silica:
+      Raw Quartz : 2
+      Time : 4
+      Amount : 3
+- Iron Ingot:
+      Iron Ore : 1
+      Time : 2
+      Amount : 1
+- Copper Ingot:
+      Copper Ore : 1
+      Time : 2
+      Amount : 1 
+- Concrete:
+      Limestone : 3
+      Time : 4
+      Amount : 1
+- Steel Ingot:
+      Iron Ore : 3
+      Coal : 3
+      Time : 4
+      Amount : 2 
+- Caterium Ingot:
+      Caterium Ore : 3
+      Time : 4
+      Amount : 1
+- Gunpowder:
+      Coal : 1
+      Sulfur : 2
+      Time : 8
+      Amount : 1
+- Quartz Crystal:
+      Raw Quartz : 2
+      Time : 4
+      Amount : 1
+- Iron Rod:
+      Iron Ingot : 1
+      Time : 4
+      Amount : 1
+- Iron Plate:
+      Iron Ingot : 2
+      Time : 4
+      Amount : 1
+- Screw:
+      Iron Rod : 1
+      Time : 4
+      Amount : 6
+- Wire:
+      Copper Ingot : 1
+      Time : 4
+      Amount : 3
+- Cable:
+      Wire : 2
+      Time : 4
+      Amount : 1
+- Quickwire:
+      Caterium Ingot : 1
+      Time : 4
+      Amount : 4
+- Steel Beam:
+      Steel Ingot : 3
+      Time : 6
+      Amount : 1
+- Steel Pipe:
+      Steel Ingot : 1
+      Time : 4
+      Amount : 1
+- Reinforced Iron Plate :
+      Iron Plate : 4
+      Screw : 24
+      Time : 12
+      Amount : 1
+- Modular Frame:
+      Iron Rod : 6
+      Reinforced Iron Plate : 3
+      Time : 15
+      Amount : 1
+- Encased Industrial Beam:
+      Concrete : 5
+      Steel Beam : 4
+      Time : 15
+      Amount : 1
+- Stator:
+      Wire : 10
+      Steel Pipe : 3
+      Time : 10
+      Amount : 1
+- Rotor:
+      Iron Rod : 3
+      Screw : 22
+      Time : 10
+      Amount : 1
+- Crystal Oscillator:
+      Quartz Crystal : 10
+      Cable : 14
+      Reinforced Iron Plate : 4
+      Time : 32
+      Amount : 1
+- Motor:
+      Rotor : 2
+      Stator : 2
+      Time : 12
+      Amount : 1
+- Plastic:
+      Crude Oil : 4
+      Time : 8
+      Amount : 3
+- Rubber:
+      Crude Oil : 4
+      Time : 8
+      Amount : 4
+- Fuel:
+      Crude Oil : 8
+      Time : 8
+      Amount : 5
+- Circuit Board:
+      Wire : 12
+      Plastic : 6
+      Time : 12
+      Amount : 2
+- Heavy Modular Frame:
+      Screw : 90
+      Steel Pipe : 15
+      Encased Industrial Beam : 5
+      Modular Frame : 5
+      Time : 30
+      Amount : 1
+- Computer:
+      Screw : 60
+      Cable : 12
+      Plastic : 18
+      Circuit Board : 10
+      Time : 32
+      Amount : 1
+- 'High-Speed Connector':
+      Cable : 10
+      Quickwire : 40
+      Plastic : 6
+      Time : 24
+      Amount : 1
+- A.I. Limiter:
+      Circuit Board : 2
+      Quickwire : 18
+      Time : 12
+      Amount : 1
+- Supercomputer:
+      Plastic : 21
+      Computer : 2
+      'High-Speed Connector' : 3
+      A.I. Limiter : 2
+      Time : 32
+      Amount : 1

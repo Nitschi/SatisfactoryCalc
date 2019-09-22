@@ -3,78 +3,42 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 #include "yaml-cpp/yaml.h"
-/*
-int main() {
-
-	YAML::Emitter out;
-	out << "Hello, World!";
-
-	std::cout << "Here's the output YAML:\n" << out.c_str(); // prints "Hello, World!"
-	std::cin.get();
-	std::ofstream myfile;
-	myfile.open("resources.yaml");
-	myfile << out.c_str();
-	myfile.close();
-
-	return 0;
-} */
-
-
 
 #include "../SatisfactoryCalc/Resource.h"
 #include "../SatisfactoryCalc/Factory.h"
+#include "../SatisfactoryCalc/YamlReader.h"
 
-ResMap loadResMap(std::string filename)
+
+
+
+int main()
 {
-	std::ifstream fin(filename);
-	YAML::Node node = YAML::Load(fin);
+	YamlReader reader;
+	std::vector<Recipe> withAltRecipes = reader.overwriteAltRecipes(reader.loadRecipes("default_recipes.yaml"),
+		reader.loadRecipes("alternative_recipes.yaml"));
+	Factory factory(withAltRecipes);
+	ResMap constraints = reader.loadResMap("constraints.yaml");
+	ResMap desired = reader.loadResMap("desired.yaml");
 
-	ResMap res_map;
-	for (YAML::const_iterator it = node.begin(); it != node.end(); ++it)
-	{
-		res_map.insert({ static_cast<ResourceType>(it->first.as<int>()), it->second.as<double>() });
-	}
+	ResMap allIngredients = factory.calcAllIngredients(desired);
+	ResMap possible = factory.calcPossibleIngredients(constraints, allIngredients);
+	ResMap factories = factory.calcNecessaryFactories(possible);
 
-	return res_map;
-}
-
-
- int main()
-{
-	Factory myFactory;
-
-	ResMap constraints = loadResMap("constraints.yaml");
-
-	ResMap desiredResources = loadResMap("desired.yaml");
+	std::cout << std::endl << "========" << std::endl << "CONSTRAINTS:" << std::endl << "========" << std::endl;
 	
-	std::map<ResourceType, double> allResources = myFactory.calcAllIngredients(desiredResources);
+	factory.printResMap(constraints);
 
-	std::map<ResourceType, double> possibleResources = myFactory.calcPossibleIngredients(constraints, allResources);
+	std::cout << std::endl << "========" << std::endl << "DESIRED:" << std::endl << "========" << std::endl;
+	factory.printResMap(desired);
 
-	std::map<ResourceType, double> necessaryFactories = myFactory.calcNecessaryFactories(possibleResources);
+	std::cout << std::endl << "========" << std::endl << "POSSIBLE:" << std::endl << "========" << std::endl;
+	factory.printResMap(possible);
 
-	std::cout << std::endl << "CONSTRAINTS:" << std::endl << std::endl;
-	for (auto& pair : constraints) {
-		std::cout << "  -  " << resourceNames[pair.first] << " ---> " << pair.second << std::endl;
-	}
-
-	std::cout << std::endl << "DESIRED:" << std::endl << std::endl;
-	for (auto& pair : desiredResources) {
-		std::cout << "  -  " << resourceNames[pair.first] << " ---> " << pair.second << std::endl;
-	}
-
-	std::cout << std::endl << "POSSIBLE:" << std::endl << std::endl;
-
-	for (auto& pair : possibleResources) {
-		std::cout << "  -  " << resourceNames[pair.first] << " ---> " << pair.second << std::endl;
-	}
-
-	std::cout << std::endl << "FACTORIES:" << std::endl << std::endl;
-	for (auto& pair : necessaryFactories) {
-		std::cout << "  -  " << resourceNames[pair.first] << " ---> " << pair.second << std::endl;
-	}
+	std::cout << std::endl << "========" << std::endl << "FACTORIES:" << std::endl << "========" << std::endl;
+	factory.printResMap(factories);
 
 	std::cin.get();
 	return 0;
