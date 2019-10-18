@@ -8,3 +8,5 @@ Allows the calculation of an optimal factory setup for the factory simulation ga
 4. The program calculates the required resources, intermediates and amount of factories each
 
 With provided recipes the program can work for all kinds of games that include production lines, such as Factorio, Anno and more.
+
+Recipes are defined in SatisfactoryCalc/recipes.yaml
