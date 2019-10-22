@@ -8,10 +8,11 @@ ResMap YamlReader::loadResMap(std::string filename)
 	std::ifstream fin(filename);
 	YAML::Node node = YAML::Load(fin);
 
-	return nodeMapToResMap(node);
+	return YamlReader::nodeMapToResMap(node);
 }
 
-ResMap YamlReader::nodeMapToResMap(YAML::Node node)
+
+ResMap YamlReader::nodeMapToResMap(const YAML::Node &node)
 {
 	ResMap res_map;
 	for (YAML::const_iterator it = node.begin(); it != node.end(); ++it)
@@ -20,6 +21,7 @@ ResMap YamlReader::nodeMapToResMap(YAML::Node node)
 	}
 	return res_map;
 }
+
 
 std::vector<Recipe> YamlReader::loadRecipes(std::string filename)
 {
@@ -35,7 +37,7 @@ std::vector<Recipe> YamlReader::loadRecipes(std::string filename)
 
 		double time { recipeIt->begin()->second["Time"].as<double>() };
 		
-		ResMap in = nodeMapToResMap(recipeIt->begin()->second);
+		ResMap in = YamlReader::nodeMapToResMap(recipeIt->begin()->second);
 
 		// TODO: Check if recipe only depends on previously defined resources
 		in.erase("Amount");
@@ -45,12 +47,11 @@ std::vector<Recipe> YamlReader::loadRecipes(std::string filename)
 
 		recipeVec.push_back(recipe);
 	}
-
 	return recipeVec;
-
 }
 
-std::vector<Recipe> YamlReader::overwriteAltRecipes(std::vector<Recipe> defaultRecipes, std::vector<Recipe> altRecipes)
+
+std::vector<Recipe> YamlReader::overwriteAltRecipes(const std::vector<Recipe> &defaultRecipes, const std::vector<Recipe> &altRecipes)
 {
 	std::vector<Recipe> myRecipes = defaultRecipes;
 	for (auto& altRecipe : altRecipes)

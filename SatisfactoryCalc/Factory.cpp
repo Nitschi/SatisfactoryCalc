@@ -1,7 +1,5 @@
 #include "Factory.h"
-#include "Resource.h"
 #include <assert.h>
-
 #include <iostream>
 #include <algorithm>
 #include <assert.h>

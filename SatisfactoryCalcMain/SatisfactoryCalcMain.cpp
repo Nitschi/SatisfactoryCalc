@@ -7,21 +7,18 @@
 
 #include "yaml-cpp/yaml.h"
 
-#include "../SatisfactoryCalc/Resource.h"
+#include "../SatisfactoryCalc/Recipe.h"
 #include "../SatisfactoryCalc/Factory.h"
 #include "../SatisfactoryCalc/YamlReader.h"
 
 
-
-
 int main()
 {
-	YamlReader reader;
-	std::vector<Recipe> withAltRecipes = reader.overwriteAltRecipes(reader.loadRecipes("default_recipes.yaml"),
-		reader.loadRecipes("alternative_recipes.yaml"));
+	std::vector<Recipe> withAltRecipes = YamlReader::overwriteAltRecipes(YamlReader::loadRecipes("default_recipes.yaml"),
+		YamlReader::loadRecipes("alternative_recipes.yaml"));
 	Factory factory(withAltRecipes);
-	ResMap constraints = reader.loadResMap("constraints.yaml");
-	ResMap desired = reader.loadResMap("desired.yaml");
+	ResMap constraints = YamlReader::loadResMap("constraints.yaml");
+	ResMap desired = YamlReader::loadResMap("desired.yaml");
 
 	ResMap allIngredients = factory.calcAllIngredients(desired);
 	ResMap possible = factory.calcPossibleIngredients(constraints, allIngredients);
@@ -43,9 +40,3 @@ int main()
 	std::cin.get();
 	return 0;
 }
-
-
-
-
-
-

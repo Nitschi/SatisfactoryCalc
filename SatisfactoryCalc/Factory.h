@@ -2,7 +2,7 @@
 
 #include <list>
 #include <map>
-#include "Resource.h"
+#include "Recipe.h"
 
 
 class Factory

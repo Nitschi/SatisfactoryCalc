@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Resource.h"
+#include "Recipe.h"
 #include "yaml-cpp/yaml.h"
 #include <fstream>
 
-struct YamlReader
+namespace YamlReader
 {
 	ResMap loadResMap(std::string filename);
-	ResMap nodeMapToResMap(YAML::Node node);
+	ResMap nodeMapToResMap(const YAML::Node &node);
 	std::vector<Recipe> loadRecipes(std::string filename);
-	std::vector<Recipe> overwriteAltRecipes(std::vector<Recipe> defaultRecipes, std::vector<Recipe> altRecipes);
+	std::vector<Recipe> overwriteAltRecipes(const std::vector<Recipe> &defaultRecipes, const std::vector<Recipe> &altRecipes);
 };
