@@ -1,6 +1,7 @@
-#include "YamlReader.h"
+#include "YamlReader.hpp"
+#include "Recipe.hpp"
 #include <iostream>
-#include <filesystem>
+
 
 
 ResMap YamlReader::loadResMap(std::string filename)
@@ -27,25 +28,23 @@ std::vector<Recipe> YamlReader::loadRecipes(std::string filename)
 {
 	std::ifstream fin(filename);
 	YAML::Node node = YAML::Load(fin);
-
 	std::vector<Recipe> recipeVec;
 
-	for (YAML::const_iterator recipeIt = node.begin(); recipeIt != node.end(); ++recipeIt)
+	//for (YAML::const_iterator recipeIt = node.begin(); recipeIt != node.end(); ++recipeIt)
+	for (auto recipe : node)
 	{
-		// TODO: use recipe : node syntax
-		Resource output = {recipeIt->begin()->first.as<std::string>() , recipeIt->begin()->second["Amount"].as<double>() };
-
-		double time { recipeIt->begin()->second["Time"].as<double>() };
+		Resource output {recipe.begin()->first.as<std::string>() , recipe.begin()->second["Amount"].as<double>() };
+		double time { recipe.begin()->second["Time"].as<double>() };
 		
-		ResMap in = YamlReader::nodeMapToResMap(recipeIt->begin()->second);
+		ResMap in = YamlReader::nodeMapToResMap(recipe.begin()->second);
 
 		// TODO: Check if recipe only depends on previously defined resources
 		in.erase("Amount");
 		in.erase("Time");
 
-		Recipe recipe(in, output, time);
+		Recipe the_recipe(in, output, time);
 
-		recipeVec.push_back(recipe);
+		recipeVec.push_back(the_recipe);
 	}
 	return recipeVec;
 }

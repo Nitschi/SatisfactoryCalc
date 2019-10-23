@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Recipe.h"
+#include "Recipe.hpp"
 #include "yaml-cpp/yaml.h"
 #include <fstream>
 

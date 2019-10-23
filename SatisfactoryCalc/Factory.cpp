@@ -1,4 +1,4 @@
-#include "Factory.h"
+#include "Factory.hpp"
 #include <assert.h>
 #include <iostream>
 #include <algorithm>
@@ -24,12 +24,13 @@ ResMap Factory::oneStepIngredients(Recipe recipe, Resource desOut)
 
 Recipe Factory::getRecipe(std::string resName)
 {
-	for (auto recipe : allRecipes)
+	for (auto& recipe : allRecipes)
 	{
 		if (recipe.out.first == resName) {
 			return recipe;
 		}
 	}
+	
 	std::cout << "Recipe for " << resName << " not found!" << std::endl;
 }
 

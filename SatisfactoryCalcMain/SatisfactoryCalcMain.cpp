@@ -4,12 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-
-#include "yaml-cpp/yaml.h"
-
-#include "../SatisfactoryCalc/Recipe.h"
-#include "../SatisfactoryCalc/Factory.h"
-#include "../SatisfactoryCalc/YamlReader.h"
+#include "../SatisfactoryCalc/Recipe.hpp"
+#include "../SatisfactoryCalc/Factory.hpp"
+#include "../SatisfactoryCalc/YamlReader.hpp"
 
 
 int main()
