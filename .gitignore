@@ -111,6 +111,10 @@ captures/
 .idea/dictionaries
 .idea/libraries
 .idea/caches
+
+# VS Code
+.vscode/
+
 # Android Studio 3 in .gitignore file.
 .idea/caches/build_file_checksums.ser
 .idea/modules.xml
